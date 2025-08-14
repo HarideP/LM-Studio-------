@@ -1,87 +1,90 @@
-## LM Studio 目录迁移与目录联接工具
+## LM Studio Directory Migration & Junction Tool
 
-> **使用前请顺手点个 Star 支持本项目，谢谢！🌟**
+English | [中文](README_zh.md)
 
-本项目提供一个适用于 Windows 的图形化/命令行工具，用于将 LM Studio 的模型与数据目录从默认位置迁移到其他磁盘路径，并在原位置创建目录联接（Junction）。迁移完成后，LM Studio 仍可通过原路径访问新位置的内容，既节省系统盘空间，又不影响使用体验。
+> **Please consider giving this project a Star before use. Thank you for your support! 🌟**
 
-### 你可以用它做什么
-- 将 `%USERPROFILE%\.lmstudio` 迁移到其他磁盘（默认建议 `D:\LMstudio_AIModels`）。
-- 复制完成后自动删除源目录，并在源路径创建目录联接指向目标目录。
-- 目标目录已存在时，可选择删除后覆盖复制，或跳过复制仅创建联接。
-- 提供 GUI 界面与 CLI 命令行两种使用方式。
-- 自动优先使用 `robocopy` 加速复制；若系统无 `robocopy`，自动退回到 Python 复制。
-- 迁移前提醒并检测：是否以管理员身份运行、是否已关闭 LM Studio。
+This project provides a Windows GUI/CLI tool to move LM Studio’s models and data directory from its default location to another drive, and create a directory junction at the original path. After migration, LM Studio can still access the content via the original path, saving space on the system drive without affecting user experience.
 
-### 系统要求
-- 仅支持 Windows（Windows 10/11）。
-- Python 3.10 及以上（系统通常自带 Tkinter）。
+### What you can do with it
+- Move `%USERPROFILE%\.lmstudio` to another drive (default suggestion: `D:\LMstudio_AIModels`).
+- After copying, automatically remove the source directory and create a junction at the original path pointing to the target.
+- If the target directory already exists, choose to delete and overwrite, or skip copying and only create the junction.
+- Offer both a GUI and a CLI mode.
+- Prefer `robocopy` for fast copying; when unavailable, fall back to Python copying.
+- Pre-execution reminders and checks: whether running as Administrator, and whether LM Studio is fully closed.
 
-### 文件结构
-- `move_lmstudio.py`：主程序（同时支持 GUI 与 CLI）。
-- `movefile.bat`：原批处理脚本（可不再使用）。
+### Requirements
+- Windows only (Windows 10/11).
+- Python 3.10+ (Tkinter is typically included on Windows).
 
-### 使用前的重要提示
-1) 请以管理员身份运行（创建目录联接需要管理员权限或启用开发者模式）。
-2) 请确保已完全关闭 LM Studio（包括托盘、后台进程）。
-3) 建议先备份重要数据。
+### Files
+- `move_lmstudio.py`: Main tool (supports both GUI and CLI).
+- `movefile.bat`: Legacy batch script (no longer necessary).
 
-### 快速开始（GUI 推荐）
-1. 以管理员身份打开 PowerShell 或 CMD。
-2. 切换到项目目录。
-3. 运行：
+### Important notes before use
+1) Run as Administrator (creating a directory junction requires elevated privileges or Developer Mode).
+2) Make sure LM Studio is fully closed (including tray and background processes).
+3) Consider backing up important data.
+
+### Quick start (GUI recommended)
+1. Open PowerShell or CMD as Administrator.
+2. Navigate to the project directory.
+3. Run:
 ```bash
 python move_lmstudio.py --gui
 ```
-4. 在界面中：
-   - 设置【源目录】（默认：`%USERPROFILE%\.lmstudio`）。
-   - 设置【目标目录】（默认：`D:\LMstudio_AIModels`）。
-   - 可选勾选：
-     - “若目标已存在则删除并覆盖复制”。
-     - “跳过复制，仅在源位置创建指向目标的目录联接”。
-   - 点击“查看目录信息”确认体量与状态。
-   - 点击“开始执行”，按提示确认即可。
+4. In the GUI:
+   - Set Source (default: `%USERPROFILE%\.lmstudio`).
+   - Set Target (default: `D:\LMstudio_AIModels`).
+   - Optional:
+     - "Delete and overwrite if target exists".
+     - "Skip copy, only create junction at source path".
+   - Click "View Info" to inspect directory stats.
+   - Click "Start" and confirm prompts.
 
-### 命令行模式（CLI）
-1. 以管理员身份打开 PowerShell 或 CMD。
-2. 运行：
+### CLI mode
+1. Open PowerShell or CMD as Administrator.
+2. Run:
 ```bash
 python move_lmstudio.py --cli
 ```
-3. 按交互提示依次：
-   - 输入或确认源目录与目标目录。
-   - 若目标已存在，选择继续方式（重新输入、删除覆盖复制、仅创建联接、退出）。
-   - 确认已以管理员身份运行并关闭 LM Studio 后开始执行。
+3. Follow the prompts:
+   - Enter/confirm source and target paths.
+   - If the target exists, choose from re-enter, delete & overwrite copy, link-only, or exit.
+   - Confirm that you’re running as Administrator and LM Studio has been fully closed.
 
-### 默认路径
-- 源目录默认：`%USERPROFILE%\.lmstudio`
-- 目标目录默认：`D:\LMstudio_AIModels`
-（均可在 GUI 或 CLI 中自定义）
+### Defaults
+- Source: `%USERPROFILE%\.lmstudio`
+- Target: `D:\LMstudio_AIModels`
+(Both can be customized in GUI or CLI.)
 
-### 操作说明
-- 复制：将源目录完整复制到目标目录（优先 `robocopy`，失败则使用 Python 复制）。
-- 删除源目录：复制成功后删除源目录（可显著释放系统盘空间）。
-- 创建目录联接：在原源目录位置创建到目标目录的 Junction，使 LM Studio 继续使用原路径访问新位置。
+### Operations
+- Copy: Fully copy the source directory to the target (`robocopy` preferred; if unavailable, Python fallback).
+- Remove source: After a successful copy, remove the source directory (free up system drive).
+- Create junction: Create a junction at the original source path pointing to the target, so LM Studio keeps using the original path.
 
-### 常见问题与排查
-- 无法创建联接/报权限错误：
-  - 请以管理员身份运行终端，或开启“开发者模式”。
-  - 确保目标路径可访问，且源路径在删除后可用于创建联接。
-- 目标目录已存在：
-  - 请选择“删除并覆盖复制”，或在 GUI 勾选对应选项。
-  - 或选择“跳过复制，仅联接到现有目标”。
-- 复制很慢：
-  - 确保系统可用 `robocopy`（Windows 自带）。
-  - 若退回到 Python 复制，速度会慢一些，属正常现象。
-- LM Studio 仍占用文件：
-  - 请完全关闭 LM Studio，包括托盘与后台进程后再执行。
+### FAQ / Troubleshooting
+- Cannot create junction / permission errors:
+  - Run the terminal as Administrator, or enable "Developer Mode".
+  - Ensure the target path is accessible, and the source path is available for junction creation after deletion.
+- Target directory already exists:
+  - Choose "Delete & overwrite copy" in CLI, or check the corresponding option in GUI.
+  - Or choose "Link-only" to use the existing target without copying.
+- Copy is slow:
+  - Ensure `robocopy` is available (bundled with Windows).
+  - Python fallback copying is expected to be slower.
+- LM Studio still holds files:
+  - Fully close LM Studio including tray and background processes, then retry.
 
-### 安全与提示
-- 本工具在执行“删除并覆盖复制”时会删除指定的目标目录，请谨慎确认路径。
-- 建议在迁移前备份关键数据。
+### Safety
+- When using "Delete & overwrite", the specified target directory will be removed first. Double-check paths.
+- Back up important data beforehand.
 
-### 还原/撤销
-- 若需要撤销迁移，可删除源路径的联接目录（Junction），并将数据复制回原路径；或在工具中将目标改回原路径并再次执行。
+### Revert / Undo
+- To revert, remove the junction at the source path and copy data back; or set the target back to the original path in the tool and run again.
 
-
+### License
+This tool is provided as-is, without warranties or liabilities.
 
 
